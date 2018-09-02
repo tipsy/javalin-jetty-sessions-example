@@ -32,5 +32,3 @@ fun sqlSessionHandler(driver: String, url: String) = SessionHandler().apply {
         }.getSessionDataStore(sessionHandler)
     }
 }
-
-
