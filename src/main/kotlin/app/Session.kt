@@ -11,6 +11,8 @@ fun fileSessionHandler() = SessionHandler().apply {
             this.storeDir = File(baseDir, "javalin-session-store").apply { mkdir() }
         }
     }
+    httpOnly = true
+    // make additional changes to your SessionHandler here
 }
 
 fun mongoSessionHandler() = SessionHandler().apply {
@@ -21,6 +23,8 @@ fun mongoSessionHandler() = SessionHandler().apply {
             collectionName = "..."
         }.getSessionDataStore(sessionHandler)
     }
+    httpOnly = true
+    // make additional changes to your SessionHandler here
 }
 
 fun sqlSessionHandler(driver: String, url: String) = SessionHandler().apply {
@@ -31,4 +35,6 @@ fun sqlSessionHandler(driver: String, url: String) = SessionHandler().apply {
             })
         }.getSessionDataStore(sessionHandler)
     }
+    httpOnly = true
+    // make additional changes to your SessionHandler here
 }

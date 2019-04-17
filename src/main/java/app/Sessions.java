@@ -17,6 +17,8 @@ public class Sessions {
         SessionCache sessionCache = new DefaultSessionCache(sessionHandler);
         sessionCache.setSessionDataStore(fileSessionDataStore());
         sessionHandler.setSessionCache(sessionCache);
+        sessionHandler.setHttpOnly(true);
+        // make additional changes to your SessionHandler here
         return sessionHandler;
     }
 
@@ -37,6 +39,8 @@ public class Sessions {
             jdbcDataStoreFactory(driver, url).getSessionDataStore(sessionHandler)
         );
         sessionHandler.setSessionCache(sessionCache);
+        sessionHandler.setHttpOnly(true);
+        // make additional changes to your SessionHandler here
         return sessionHandler;
     }
 
@@ -48,6 +52,7 @@ public class Sessions {
         return jdbcSessionDataStoreFactory;
     }
 
+    // --------------------- Mongo Sessions Handler ---------------------
     public static SessionHandler mongoSessionHandler(String url, String dbName, String collectionName) throws Exception {
         SessionHandler sessionHandler = new SessionHandler();
         SessionCache sessionCache = new DefaultSessionCache(sessionHandler);
@@ -55,10 +60,11 @@ public class Sessions {
             mongoDataStoreFactory(url, dbName, collectionName).getSessionDataStore(sessionHandler)
         );
         sessionHandler.setSessionCache(sessionCache);
+        sessionHandler.setHttpOnly(true);
+        // make additional changes to your SessionHandler here
         return sessionHandler;
     }
 
-    // --------------------- Mongo Sessions Handler ---------------------
     private static MongoSessionDataStoreFactory mongoDataStoreFactory(String url, String dbName, String collectionName) {
         MongoSessionDataStoreFactory mongoSessionDataStoreFactory = new MongoSessionDataStoreFactory();
         mongoSessionDataStoreFactory.setConnectionString(url);
