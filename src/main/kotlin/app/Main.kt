@@ -1,14 +1,22 @@
 package app
 
-import io.javalin.Context
 import io.javalin.Javalin
-import io.javalin.UnauthorizedResponse
-import io.javalin.security.Role
+import io.javalin.core.security.Role
+import io.javalin.http.Context
+import io.javalin.http.UnauthorizedResponse
 
-fun main(args: Array<String>) {
+fun main() {
 
-    val app = Javalin.create().apply {
-        sessionHandler(::fileSessionHandler)
+    val app = Javalin.create {
+        it.sessionHandler(::fileSessionHandler)
+        it.accessManager { handler, ctx, roles ->
+            val currentUser = ctx.sessionAttribute<String?>("current-user") // retrieve user stored during login
+            when {
+                currentUser == null -> redirectToLogin(ctx)
+                currentUser != null && userHasValidRole(ctx, roles) -> handler.handle(ctx)
+                else -> throw UnauthorizedResponse()
+            }
+        }
     }.start(7000)
 
     app.get("/write") { ctx ->
@@ -29,15 +37,6 @@ fun main(args: Array<String>) {
     app.get("/change-id") { ctx ->
         // it could be wise to change the session id on login, to protect against session fixation attacks
         ctx.req.changeSessionId()
-    }
-
-    app.accessManager { handler, ctx, roles ->
-        val currentUser = ctx.sessionAttribute<String?>("current-user") // retrieve user stored during login
-        when {
-            currentUser == null -> redirectToLogin(ctx)
-            currentUser != null && userHasValidRole(ctx, roles) -> handler.handle(ctx)
-            else -> throw UnauthorizedResponse()
-        }
     }
 
 }

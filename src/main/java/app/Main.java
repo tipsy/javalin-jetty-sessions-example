@@ -1,17 +1,27 @@
 package app;
 
-import io.javalin.Context;
 import io.javalin.Javalin;
-import io.javalin.UnauthorizedResponse;
-import io.javalin.security.Role;
+import io.javalin.core.security.Role;
+import io.javalin.http.Context;
+import io.javalin.http.UnauthorizedResponse;
 import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
 
-        Javalin app = Javalin.create()
-            .sessionHandler(Sessions::fileSessionHandler)
-            .start(7000);
+        Javalin app = Javalin.create(config -> {
+            config.sessionHandler(Sessions::fileSessionHandler);
+            config.accessManager((handler, ctx, roles) -> {
+                String currentUser = ctx.sessionAttribute("current-user"); // retrieve user stored during login
+                if (currentUser == null) {
+                    redirectToLogin(ctx);
+                } else if (userHasValidRole(ctx, roles)) {
+                    handler.handle(ctx);
+                } else {
+                    throw new UnauthorizedResponse();
+                }
+            });
+        }).start(7000);
 
         app.get("/write", ctx -> {
             // values written to the session will be available on all your instances if you use a session db
@@ -31,17 +41,6 @@ public class Main {
         app.get("/change-id", ctx -> {
             // it could be wise to change the session id on login, to protect against session fixation attacks
             ctx.req.changeSessionId();
-        });
-
-        app.accessManager((handler, ctx, roles) -> {
-            String currentUser = ctx.sessionAttribute("current-user"); // retrieve user stored during login
-            if (currentUser == null) {
-                redirectToLogin(ctx);
-            } else if (userHasValidRole(ctx, roles)) {
-                handler.handle(ctx);
-            } else {
-                throw new UnauthorizedResponse();
-            }
         });
 
     }
