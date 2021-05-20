@@ -47,6 +47,7 @@ public class Sessions {
     private static JDBCSessionDataStoreFactory jdbcDataStoreFactory(String driver, String url) {
         DatabaseAdaptor databaseAdaptor = new DatabaseAdaptor();
         databaseAdaptor.setDriverInfo(driver, url);
+        // databaseAdaptor.setDatasource(myDataSource); // you can set data source here (for connection pooling, etc)
         JDBCSessionDataStoreFactory jdbcSessionDataStoreFactory = new JDBCSessionDataStoreFactory();
         jdbcSessionDataStoreFactory.setDatabaseAdaptor(databaseAdaptor);
         return jdbcSessionDataStoreFactory;

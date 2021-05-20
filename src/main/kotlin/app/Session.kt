@@ -32,6 +32,7 @@ fun sqlSessionHandler(driver: String, url: String) = SessionHandler().apply {
         sessionDataStore = JDBCSessionDataStoreFactory().apply {
             setDatabaseAdaptor(DatabaseAdaptor().apply {
                 setDriverInfo(driver, url)
+                // setDatasource(myDataSource) // you can set data source here (for connection pooling, etc)
             })
         }.getSessionDataStore(sessionHandler)
     }
