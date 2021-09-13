@@ -1,7 +1,7 @@
 package app;
 
 import io.javalin.Javalin;
-import io.javalin.core.security.Role;
+import io.javalin.core.security.RouteRole;
 import io.javalin.http.Context;
 import io.javalin.http.UnauthorizedResponse;
 import java.util.Set;
@@ -45,7 +45,7 @@ public class Main {
 
     }
 
-    private static boolean userHasValidRole(Context ctx, Set<Role> roles) {
+    private static boolean userHasValidRole(Context ctx, Set<RouteRole> roles) {
         return false; // your code here
     }
 

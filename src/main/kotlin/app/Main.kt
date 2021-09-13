@@ -1,7 +1,7 @@
 package app
 
 import io.javalin.Javalin
-import io.javalin.core.security.Role
+import io.javalin.core.security.RouteRole
 import io.javalin.http.Context
 import io.javalin.http.UnauthorizedResponse
 
@@ -42,4 +42,4 @@ fun main() {
 }
 
 fun redirectToLogin(ctx: Context) = ctx.redirect("/login")
-fun userHasValidRole(ctx: Context, roles: Set<Role>) = false // your code here
+fun userHasValidRole(ctx: Context, roles: Set<RouteRole>) = false // your code here
